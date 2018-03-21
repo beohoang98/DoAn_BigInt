@@ -33,6 +33,29 @@ string BigInt::chiaChuoiCho2(string dec, int &sodu) {
 }
 
 
+string BigInt::nhanChuoiCho2(string dec, int add_value) {
+	string kq = "";
+
+	int overflow_prev = add_value;
+	int pos = dec.length()-1;
+
+	while (pos >= 0) {
+		int donvi_nhan = (dec[pos] - '0') * 2 + overflow_prev;
+		overflow_prev = donvi_nhan / 10;
+		donvi_nhan = donvi_nhan % 10;
+
+		kq.push_back(donvi_nhan + '0');
+		pos--;
+	}
+	if (overflow_prev) {
+		kq.push_back('1');
+	}
+	reverse(kq.begin(), kq.end());
+
+	return kq;
+}
+
+
 string BigInt::valueToBin(unsigned char value) {
 	//chuyen 1 so 1byte thanh chuoi nhi phan
 
@@ -61,6 +84,7 @@ string BigInt::valueToHex(unsigned char value) {
 
 	return string(s);
 }
+
 
 BigInt::BigInt(string chuoiSo) {
 	this->head = 0;
@@ -128,7 +152,7 @@ BigInt::BigInt(string chuoiSo, int coSo) {
 	//break;
 
 	case 10:
-		BigInt::BigInt(chuoiSo);
+		(*this) = BigInt(chuoiSo);
 		break;
 
 	case 16:
@@ -168,9 +192,7 @@ string BigInt::toString(int coSo) {
 	//kiem tra bit cao nhat
 	if (head & (1 << 7)) {
 		//la so am
-		kq = "1";
-
-		start_block = 14;
+		start_block = 15;
 		isNegative = true;
 	}
 	else {
@@ -186,13 +208,13 @@ string BigInt::toString(int coSo) {
 	{ // binary
 		while (start_block >= 0) {
 			string _8bit_string;
-			unsigned char block_value = body[start_block];
+			unsigned char block_value = (start_block < 15) ? body[start_block] : (head & 127);
 
 			for (int i = 0; i < 8; ++i) {
 				char bit = (block_value % 2);
 				block_value /= 2;
 
-				if (isNegative) bit = 1 - bit;
+				//if (isNegative) bit = 1 - bit;
 				_8bit_string.push_back(bit + '0');
 			}
 
@@ -201,31 +223,44 @@ string BigInt::toString(int coSo) {
 			--start_block;
 		}
 		while (kq.front() == '0') kq.erase(0, 1);
-		//if (isNegative) { // bu 2
-		//	int len = kq.length();
-		//	kq[len - 1] = 1 - kq[len - 1];
-		//}
-	}
-	break;
-
-
-	case 8:
-	{ // octave
-
 	}
 	break;
 
 
 	case 10:
 	{ // decimal
-
+		kq = "0";
+		while (start_block >= 0) {
+			unsigned char block_value = (start_block < 15) ? body[start_block] : (head&127);
+			
+			while (block_value > 0) {
+				int add_value = block_value % 2;
+				block_value /= 2;
+				kq = nhanChuoiCho2(kq, add_value);
+			}
+			--start_block;
+		}
 	}
 	break;
 
 
 	case 16:
 	{ // heximal
+		while (start_block >= 0) {
+			string _4bit_string;
+			unsigned char block_value = (start_block < 15) ? body[start_block] : (head & 127);
 
+			while (block_value > 0) {
+				char hex = block_value % 16;
+				block_value /= 16;
+				_4bit_string.push_back(HEX_VALUE[hex]);
+			}
+
+			reverse(_4bit_string.begin(), _4bit_string.end());
+			kq += _4bit_string;
+			--start_block;
+		}
+		while (kq.front() == '0') kq.erase(0, 1);
 	}
 	break;
 

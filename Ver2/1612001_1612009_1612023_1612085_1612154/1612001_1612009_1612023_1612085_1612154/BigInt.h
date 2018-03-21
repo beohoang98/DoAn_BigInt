@@ -48,6 +48,7 @@ public:
 
 	///ultility function
 	static string chiaChuoiCho2(string, int&);
+	static string nhanChuoiCho2(string, int);
 	static string valueToBin(unsigned char value);
 	static string valueToHex(unsigned char value);
 	
