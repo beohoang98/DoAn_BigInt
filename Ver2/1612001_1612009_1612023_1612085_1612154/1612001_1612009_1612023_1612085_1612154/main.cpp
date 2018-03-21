@@ -12,9 +12,9 @@ int main(int argc, char ** argv) {
 	string output_path;
 	if (argc < 2) {
 		cout << "Chua co duong dan den input va output" << endl;
-		////debug
-		//input_path = "../Debug/input.txt";
-		//output_path = "../Debug/output.txt";
+		//debug
+		/*input_path = "../Debug/input.txt";
+		output_path = "../Debug/output.txt";*/
 		return 0;
 	}
 	else {
@@ -52,7 +52,7 @@ int main(int argc, char ** argv) {
 
 				if (toanTu == PHEP_DICH_TRAI || toanTu == PHEP_DICH_PHAI) {
 					BigInt A(chuoiTraVe[0], coSo);
-					int soBit = atoi(chuoiTraVe[1].c_str());
+					int soBit = atoi(chuoiTraVe[1].c_str()); // so thu 2 la mot so nguyen (ko lon)
 
 					BigInt KQ;
 
@@ -70,36 +70,43 @@ int main(int argc, char ** argv) {
 					case PHEP_CONG:
 						KQ = A + B;
 						fout << KQ.toString(coSo) << endl;
+						//fout << A.toString(coSo) << " cong " << A.toString(coSo) << endl;
 						break;
 
 					case PHEP_NHAN:
 						KQ = A * B;
 						fout << KQ.toString(coSo) << endl;
+						//fout << A.toString(coSo) << " nhan " << A.toString(coSo) << endl;
 						break;
 
 					case PHEP_CHIA:
 						KQ = A / B;
 						fout << KQ.toString(coSo) << endl;
+						//fout << A.toString(coSo) << " chia " << A.toString(coSo) << endl;
 						break;
 
 					case PHEP_TRU:
 						KQ = A - B;
 						fout << KQ.toString(coSo) << endl;
+						//fout << A.toString(coSo) << " tru " << A.toString(coSo) << endl;
 						break;
 
 					case PHEP_AND:
 						KQ = A & B;
 						fout << KQ.toString(coSo) << endl;
+						//fout << A.toString(coSo) << " & " << A.toString(coSo) << endl;
 						break;
 
 					case PHEP_OR:
 						KQ = A | B;
 						fout << KQ.toString(coSo) << endl;
+						//fout << A.toString(coSo) << " | " << A.toString(coSo) << endl;
 						break;
 
 					case PHEP_XOR:
 						KQ = A ^ B;
 						fout << KQ.toString(coSo) << endl;
+						//fout << A.toString(coSo) << " ^ " << A.toString(coSo) << endl;
 						break;
 
 					case PHEP_NOT: // Phep NOT chua ro rang...
@@ -126,9 +133,10 @@ int main(int argc, char ** argv) {
 				fout << "input khong hop le" << endl;
 			}
 		}
-		catch (exception& e) {
-			fout << e.what() << endl;
-			cout << e.what() << endl;
+		catch (exception * e) {
+			fout << e->what() << endl;
+			cout << e->what() << endl;
+			free(e);
 		}
 	}
 

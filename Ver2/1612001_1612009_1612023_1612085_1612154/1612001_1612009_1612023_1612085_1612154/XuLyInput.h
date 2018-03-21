@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include <regex>
+#include <sstream>
 
 using namespace std;
 
@@ -24,79 +24,66 @@ using namespace std;
 
 class XuLyInput
 {
-private:
-	regex checkTinhToan;
-	regex checkQuyDoi;
 public:
 	string source;
 	int loai;
 
 	XuLyInput(string input) {
 		source = input;
-		loai = -1;
-
-		checkTinhToan = regex("^(\\d+) (\\w+) (.+) (\\w+)$");
-		checkQuyDoi = regex("^(\\d+) (\\d+) (\\w+)$");
 	};
 
 	int check(int * &soTraVe, string * &chuoiTraVe) { // kiem tra input co hop le hay khong va tra ve cac tham so
 		
 		if (chuoiTraVe != NULL) free(chuoiTraVe);
 		if (soTraVe != NULL) free(soTraVe);
-		smatch match;
+		stringstream ssinput_check1; // for Tinh toan
+		stringstream ssinput_check2; // for Quy doi
+		ssinput_check1 << (source);
+		ssinput_check2 << (source);
+
+		int coSo1, coSo2;
+		string toantu;
+		string so1, so2;
 		
-		if (regex_match(source, match, checkTinhToan)) {
-			string chuoiCoSo = match[1].str();
-			string phepToan = match[3].str();
-			int coSo = atoi(chuoiCoSo.c_str());
-
-			if (coSo != 2 && coSo != 8 && coSo != 10 && coSo != 16)
-				return KHONG_HOP_LE;
-
+		if (ssinput_check1 >> coSo1 >> so1 >> toantu >> so2) {
 			soTraVe = new int[2]; //Co so & phep toan
-			soTraVe[0] = coSo;
+			soTraVe[0] = coSo1;
 
-			if (phepToan == "+") soTraVe[1] = PHEP_CONG;
-			else if (phepToan == "-") soTraVe[1] = PHEP_TRU;
-			else if (phepToan == "*") soTraVe[1] = PHEP_NHAN;
-			else if (phepToan == "/") soTraVe[1] = PHEP_CHIA;
-			else if (phepToan == "&") soTraVe[1] = PHEP_AND;
-			else if (phepToan == "|") soTraVe[1] = PHEP_OR;
-			else if (phepToan == "^") soTraVe[1] = PHEP_XOR;
-			else if (phepToan == "~") soTraVe[1] = PHEP_NOT;
-			else if (phepToan == "<<") soTraVe[1] = PHEP_DICH_TRAI;
-			else if (phepToan == ">>") soTraVe[1] = PHEP_DICH_PHAI;
+			if (toantu == "+") soTraVe[1] = PHEP_CONG;
+			else if (toantu == "-") soTraVe[1] = PHEP_TRU;
+			else if (toantu == "*") soTraVe[1] = PHEP_NHAN;
+			else if (toantu == "/") soTraVe[1] = PHEP_CHIA;
+			else if (toantu == "&") soTraVe[1] = PHEP_AND;
+			else if (toantu == "|") soTraVe[1] = PHEP_OR;
+			else if (toantu == "^") soTraVe[1] = PHEP_XOR;
+			else if (toantu == "~") soTraVe[1] = PHEP_NOT;
+			else if (toantu == "<<") soTraVe[1] = PHEP_DICH_TRAI;
+			else if (toantu == ">>") soTraVe[1] = PHEP_DICH_PHAI;
 			else return KHONG_HOP_LE;
 
 			chuoiTraVe = new string[2];
-			chuoiTraVe[0] = match[2].str();
-			chuoiTraVe[1] = match[4].str();
+			chuoiTraVe[0] = so1;
+			chuoiTraVe[1] = so2;
 
 			return TINH_TOAN;
 		}
-
-
-		else if (regex_match(source, match, checkQuyDoi)) {
-
-			string coSo1 = match[1].str();
-			string coSo2 = match[2].str();
+		else if (ssinput_check2 >> coSo1 >> coSo2 >> so1) {
 
 			soTraVe = new int[2]; //2 co so
-			soTraVe[0] = atoi(coSo1.c_str());
-			soTraVe[1] = atoi(coSo2.c_str());
+			soTraVe[0] = coSo1;
+			soTraVe[1] = coSo2;
 
 			chuoiTraVe = new string[1]; //so duy nhat can doi
-			chuoiTraVe[0] = match[3].str();
+			chuoiTraVe[0] = so1;
 
 			return QUY_DOI;
 		}
-
 
 		return KHONG_HOP_LE;
 	}	
 
 	~XuLyInput() {
-		cout << "Hello world!" << endl;
+		//cout << "Hello world!" << endl;
 	}
 };
 
