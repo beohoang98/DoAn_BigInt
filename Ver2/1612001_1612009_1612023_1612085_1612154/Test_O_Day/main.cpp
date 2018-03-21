@@ -10,8 +10,8 @@ int main() {
 	BigInt B("13C",16);
 	BigInt C = A + B;
 
-	cout << A.toString(10) << endl << A.toString(10) << endl << C.toString(10) << endl;
-
+	//cout << A.toString(10) << endl << A.toString(10) << endl << C.toString(10) << endl;
+	
 	system("pause");
 
 	return 0;
