@@ -6,10 +6,12 @@ using namespace std;
 
 int main() {
 	int sodu = 10;
-	BigInt A ("-13B", 16);
+	BigInt A ("13B", 16);
+	BigInt B("13C",16);
+	BigInt C = A + B;
 
-	///ádasdasdadasdsd
-	
+	cout << A.toString(10) << endl << A.toString(10) << endl << C.toString(10) << endl;
+
 	system("pause");
 
 	return 0;

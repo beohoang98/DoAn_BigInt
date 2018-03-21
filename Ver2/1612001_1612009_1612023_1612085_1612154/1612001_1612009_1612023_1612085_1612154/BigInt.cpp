@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS
+﻿#define _CRT_SECURE_NO_WARNINGS
 
 #include "BigInt.h"
 #include <algorithm>
@@ -69,7 +69,7 @@ BigInt::BigInt(string chuoiSo) {
 	//check negative
 	if (chuoiSo[0] == '-') {
 		//gan bit 1 vao bit cao nhat
-		head = head | (1 << 8);
+		head = head | (1 << 7);
 
 		//bo dau - o dau chuoi ra
 		chuoiSo.erase(0,1); 
@@ -136,7 +136,7 @@ BigInt::BigInt(string chuoiSo, int coSo) {
 		//check negative
 		if (chuoiSo[0] == '-') {
 			//gan bit 1 vao bit cao nhat
-			head = head | (1 << 8);
+			head = head | (1 << 7);
 			//bo dau - o dau chuoi ra
 			chuoiSo.erase(0, 1);
 		}
@@ -166,7 +166,7 @@ string BigInt::toString(int coSo) {
 
 
 	//kiem tra bit cao nhat
-	if (head & (1 << 8)) {
+	if (head & (1 << 7)) {
 		//la so am
 		kq = "1";
 
@@ -239,7 +239,30 @@ string BigInt::toString(int coSo) {
 }
 
 BigInt BigInt::operator+(const BigInt &A) {
-	return BigInt();//de tam
+	BigInt res;
+	if (head < 0 && A.head<0)		//cả 2 đều âm
+	{
+
+	}
+	if (head < 0)
+	{
+
+	}
+	if (A.head < 0)
+	{
+
+	}
+	//cả 2 đều dương
+	char du = 0;
+	for (int i = 0; i < 15; i++)
+	{
+		int tmp = body[i] + A.body[i] + du;
+		res.body[i] = tmp % 256;
+		du = tmp / 256;
+	}
+	res.head = (head + A.head + du) % 256;
+
+	return res;
 }
 
 BigInt BigInt::operator-(const BigInt &A) {
@@ -264,6 +287,45 @@ BigInt BigInt::operator|(const BigInt &A) {
 
 BigInt BigInt::operator^(const BigInt &A) {
 	return BigInt();//de tam
+}
+
+int BigInt::compare(const BigInt &A)
+{
+	//Chưa xử lý số âm
+
+	//so sánh 2 số có ít nhất 1 số dương
+	if (head > A.head)
+		return 1;
+	if (head<A.head) 
+		return -1;
+	for (int i = 14; i >= 0; i--)
+	{
+		if (body[i]>A.body[i])
+			return 1;
+		if (body[i]<A.body[i])
+			return -1;
+	}
+	return 0;
+}
+
+bool BigInt::operator>(const BigInt &A) {
+	return compare(A) == 1;
+}
+
+bool BigInt::operator<(const BigInt &A) {
+	return compare(A) == -1;
+}
+
+bool BigInt::operator==(const BigInt &A) {
+	return compare(A) == 0;
+}
+
+bool BigInt::operator>=(const BigInt &A) {
+	return compare(A)>-1;
+}
+
+bool BigInt::operator<=(const BigInt &A) {
+	return compare(A) < 1;
 }
 
 

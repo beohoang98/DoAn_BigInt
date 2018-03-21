@@ -34,7 +34,12 @@ public:
 	BigInt operator&(const BigInt &); //AND
 	BigInt operator|(const BigInt &); //OR
 	BigInt operator^(const BigInt &); //XOR
-
+	int compare(const BigInt &);
+	bool operator>(const BigInt &);
+	bool operator<(const BigInt &);
+	bool operator==(const BigInt &);
+	bool operator>=(const BigInt &);
+	bool operator<=(const BigInt &);
 	friend BigInt operator~(const BigInt &); // phep NOT, chi tac dung len chinh minh
 
 	BigInt operator<<(int soBit); //dich trai
