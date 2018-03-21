@@ -96,7 +96,7 @@ public:
 	}	
 
 	~XuLyInput() {
-
+		cout << "Hello world!" << endl;
 	}
 };
 
