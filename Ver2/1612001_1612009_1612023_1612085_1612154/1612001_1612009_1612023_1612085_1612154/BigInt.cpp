@@ -12,6 +12,9 @@ BigInt::BigInt() {
 
 //ultility function
 string BigInt::chiaChuoiCho2(string dec, int &sodu) {
+	
+	if (dec == "0") return "0";
+
 	string kq;
 
 	sodu = 0;
@@ -22,17 +25,16 @@ string BigInt::chiaChuoiCho2(string dec, int &sodu) {
 	}
 
 	while (pos < dec.length()) {
-		int sochia = ((dec[pos] - '0') / 2 + sodu * 5) + '0';
-		if (sochia > '0') kq.push_back(((dec[pos] - '0') / 2 + sodu * 5) + '0');
+		int sochia = (dec[pos] - '0') / 2 + sodu * 5;
+		kq.push_back(sochia + '0');
 		
 		sodu = (dec[pos] - '0') % 2;
 		pos++;
 	}
+	while (kq.front() == '0' && kq.length() > 1) kq.erase(0, 1);
 
 	return kq;
 }
-
-
 string BigInt::nhanChuoiCho2(string dec, int add_value) {
 	string kq = "";
 
@@ -56,64 +58,9 @@ string BigInt::nhanChuoiCho2(string dec, int add_value) {
 }
 
 
-string BigInt::valueToBin(unsigned char value) {
-	//chuyen 1 so 1byte thanh chuoi nhi phan
 
-	if (value = 0) return "0";
-
-	string result;
-	while (value > 0) {
-		char bit = value % 2;
-		value /= 2;	
-		result.push_back(bit + '0');
-	}
-
-	while (result[result.length() - 1] == '0') {
-		result.pop_back();
-	}
-	reverse(result.begin(), result.end());
-	return result;
-}
-
-
-string BigInt::valueToHex(unsigned char value) {
-	//chuyen 1 so int thanh chuoi hexa
-	char s[9];
-
-	sprintf(s, "%X", value);
-
-	return string(s);
-}
-
-
-BigInt::BigInt(string chuoiSo) {
-	this->head = 0;
-	memset(body, 0, 15 * sizeof(unsigned char));
-
-	//check negative
-	if (chuoiSo[0] == '-') {
-		//gan bit 1 vao bit cao nhat
-		head = head | (1 << 7);
-
-		//bo dau - o dau chuoi ra
-		chuoiSo.erase(0,1); 
-	}
-	
-
-	//chuyen dec sang bit
-	int sodu = 0;
-	int pos = 0;
-	while (chuoiSo != "") {
-		chuoiSo = chiaChuoiCho2(chuoiSo, sodu);
-
-		int vitri_trong_bit = pos % 8;
-		int vitri_trong_mang = pos / 8;
-
-		// su dung phep | de gan 1bit vao vi tri thu pos
-		body[vitri_trong_mang] |= sodu << vitri_trong_bit;
-
-		pos++;
-	}
+BigInt::BigInt(string chuoiSo) : BigInt(chuoiSo, 10) {
+	// neu khong noi gi, mac dinh chuoi truyen vo la he co so 10
 }
 
 BigInt::BigInt(string chuoiSo, int coSo) {
@@ -136,35 +83,31 @@ BigInt::BigInt(string chuoiSo, int coSo) {
 	}
 	break;
 
-
-	//case 8:
-	//{//case block
-	//	for (int len = chuoiSo.length(), pos = len - 1; pos >= 0; --pos) {
-	//		int bit_hientai = chuoiSo[pos] - '0';
-
-	//		int vitri_3bit_trong_byte = ((len - pos - 1) % 8) % 3;
-	//		int vitri_trong_mang = (len - pos - 1) / 8;
-
-	//		// su dung phep | de gan 1bit vao vi tri thu pos
-	//		body[vitri_trong_mang] |= bit_hientai << 0;
-	//	}
-	//}
-	//break;
-
 	case 10:
-		(*this) = BigInt(chuoiSo);
-		break;
-
-	case 16:
-	{//case block
-		//check negative
+	{
+		//kiem tra so am
 		if (chuoiSo[0] == '-') {
-			//gan bit 1 vao bit cao nhat
 			head = head | (1 << 7);
-			//bo dau - o dau chuoi ra
 			chuoiSo.erase(0, 1);
 		}
 
+		//chuyen dec sang bit
+		int sodu = 0;
+		int pos = 0;
+		while (chuoiSo != "0") {
+			chuoiSo = chiaChuoiCho2(chuoiSo, sodu);
+			//tim vi tri cua bit
+			int vitri_trong_bit = pos % 8;
+			int vitri_trong_mang = pos / 8;
+			// su dung phep | de gan 1bit vao vi tri thu pos
+			body[vitri_trong_mang] |= sodu << vitri_trong_bit;
+			pos++;
+		}
+	}
+	break;
+
+	case 16:
+	{//case block
 		for (int len = chuoiSo.length(), pos = len - 1; pos >= 0; --pos) {
 			int _4bit_hientai = HEX_VALUE.find(chuoiSo[pos]);
 
@@ -181,6 +124,15 @@ BigInt::BigInt(string chuoiSo, int coSo) {
 		throw new exception("Co so khong hop le");
 		break;
 	}
+}
+
+
+
+
+//chuyen thanh chuoi
+string BigInt::toString() {
+	//mac dinh la xuat ra chuoi he so thap phan
+	return this->toString(10);
 }
 
 string BigInt::toString(int coSo) {
@@ -230,15 +182,16 @@ string BigInt::toString(int coSo) {
 	case 10:
 	{ // decimal
 		kq = "0";
-		while (start_block >= 0) {
-			unsigned char block_value = (start_block < 15) ? body[start_block] : (head&127);
-			
-			while (block_value > 0) {
-				int add_value = block_value % 2;
-				block_value /= 2;
-				kq = nhanChuoiCho2(kq, add_value);
-			}
-			--start_block;
+		int pos = (start_block+1) * 8;
+
+		while (pos >= 0) {
+			int vitri_trong_bit = pos % 8;
+			int vitri_block = pos / 8;
+			char bit = body[vitri_block] & (1 << vitri_trong_bit);
+			int add_bit = bit ? 1 : 0;
+
+			kq = nhanChuoiCho2(kq, add_bit);
+			--pos;
 		}
 	}
 	break;
@@ -273,6 +226,11 @@ string BigInt::toString(int coSo) {
 	return kq;
 }
 
+
+
+
+
+/// CAC XU LY TOAN TU 2 NGOI
 BigInt BigInt::operator+(const BigInt &A) {
 	BigInt res;
 	if (head < 0 && A.head<0)		//cả 2 đều âm

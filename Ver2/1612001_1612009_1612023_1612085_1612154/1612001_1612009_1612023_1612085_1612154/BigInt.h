@@ -22,9 +22,8 @@ public:
 	BigInt(string chuoiSo);
 	BigInt(string chuoiSo, int coSo); //neu khong de co so, co so mac dinh la 10
 
-
+	string toString();
 	string toString(int coSo); // chuyen thanh chuoi voi he co so, mac dinh la 10
-
 
 	//phep toan
 	BigInt operator+(const BigInt &);
@@ -34,12 +33,15 @@ public:
 	BigInt operator&(const BigInt &); //AND
 	BigInt operator|(const BigInt &); //OR
 	BigInt operator^(const BigInt &); //XOR
+
+	//so sanh
 	int compare(const BigInt &);
 	bool operator>(const BigInt &);
 	bool operator<(const BigInt &);
 	bool operator==(const BigInt &);
 	bool operator>=(const BigInt &);
 	bool operator<=(const BigInt &);
+
 	friend BigInt operator~(const BigInt &); // phep NOT, chi tac dung len chinh minh
 
 	BigInt operator<<(int soBit); //dich trai
@@ -49,8 +51,6 @@ public:
 	///ultility function
 	static string chiaChuoiCho2(string, int&);
 	static string nhanChuoiCho2(string, int);
-	static string valueToBin(unsigned char value);
-	static string valueToHex(unsigned char value);
 	
 
 	~BigInt();
