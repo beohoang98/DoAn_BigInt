@@ -9,7 +9,7 @@ void main() {
 	//test linh tinh gi do o day
 	string a = "12345";
 
-	cout << sizeof(a) << endl;
+	cout << a << endl;
 
 	system("pause");
 }

@@ -8,8 +8,7 @@ int main() {
 	int sodu = 10;
 	BigInt A ("-13B", 16);
 
-	string binOfA = A.toString(2);
-
+	///ádasdasdadasdsd
 	
 	system("pause");
 
