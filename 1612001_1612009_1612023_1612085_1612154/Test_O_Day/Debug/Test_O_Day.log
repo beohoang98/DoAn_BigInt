@@ -1,0 +1,3 @@
+﻿  main.cpp
+e:\c_drive\b_hoctap\ktmt-hn\doan\1612001_1612009_1612023_1612085_1612154\test_o_day\main.cpp(7): warning C4326: return type of 'main' should be 'int' instead of 'void'
+  Test_O_Day.vcxproj -> E:\C_Drive\B_HocTap\KTMT-HN\DoAn\1612001_1612009_1612023_1612085_1612154\Debug\Test_O_Day.exe
