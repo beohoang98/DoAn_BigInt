@@ -260,13 +260,49 @@ BigInt BigInt::operator+(const BigInt &A) {
 		res.body[i] = tmp % 256;
 		du = tmp / 256;
 	}
-	res.head = (head + A.head + du) % 256;
+	res.head = (head + A.head + du) & 127;
 
 	return res;
 }
 
 BigInt BigInt::operator-(const BigInt &A) {
-	return BigInt();//de tam
+	BigInt res;
+	if (*this == A)
+		return res;
+	if (head < 0 && A.head<0)		//cả 2 đều âm
+	{
+
+	}
+	if (head < 0)
+	{
+
+	}
+	if (A.head < 0)
+	{
+
+	}
+
+	//cả 2 đều dương
+	if (*this<A)		
+	{
+
+	}
+	
+	char nho = 0;
+	for (int i = 0; i < 15; i++)
+	{
+		int tmp = body[i] - A.body[i] - nho;
+		if (tmp < 0)
+		{
+			nho = 1;
+			tmp += 256;
+		}
+		else
+			nho = 0;
+		res.body[i] = tmp;
+	}
+	res.head = (head - A.head - nho) & 127;
+	return res;
 }
 
 BigInt BigInt::operator*(const BigInt &A) {
