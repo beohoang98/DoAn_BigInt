@@ -1,6 +1,4 @@
 *.pdb
 *.ilk
 *.obj
-*.suo
-*.sdf
 */Debug/
