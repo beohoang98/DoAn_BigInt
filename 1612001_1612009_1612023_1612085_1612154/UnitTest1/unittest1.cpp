@@ -68,7 +68,7 @@ namespace UnitTest1
 			BigInt A("123123123123123123");
 			BigInt B("456456456");
 			BigInt C = A * B;
-			Assert::AreEqual("56 200 344 432 432 432 376 232 088", C.toString(10).c_str());
+			Assert::AreEqual("56200344432432432376232088", C.toString(10).c_str());
 		}
 	};
 }

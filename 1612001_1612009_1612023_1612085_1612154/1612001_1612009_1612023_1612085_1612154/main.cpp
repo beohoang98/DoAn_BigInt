@@ -62,56 +62,56 @@ int main(int argc, char ** argv) {
 					fout << KQ.toString(coSo);
 				}
 				else {
-					BigInt A(chuoiTraVe[0], coSo); //chuyen chuoi thanh so nguyen
-					BigInt B(chuoiTraVe[1], coSo); //	voi co so cho truoc
+					BigInt * A = new BigInt(chuoiTraVe[0], coSo); //chuyen chuoi thanh so nguyen
+					BigInt * B = new BigInt(chuoiTraVe[1], coSo); //	voi co so cho truoc
 					BigInt KQ;
 
 					switch (toanTu) {
 					case PHEP_CONG:
-						KQ = A + B;
+						KQ = *A + *B;
 						fout << KQ.toString(coSo) << endl;
 						//fout << A.toString(coSo) << " cong " << A.toString(coSo) << endl;
 						break;
 
 					case PHEP_NHAN:
-						KQ = A * B;
+						KQ = *A * *B;
 						fout << KQ.toString(coSo) << endl;
 						//fout << A.toString(coSo) << " nhan " << A.toString(coSo) << endl;
 						break;
 
 					case PHEP_CHIA:
-						KQ = A / B;
+						KQ = *A / *B;
 						fout << KQ.toString(coSo) << endl;
 						//fout << A.toString(coSo) << " chia " << A.toString(coSo) << endl;
 						break;
 
 					case PHEP_TRU:
-						KQ = A - B;
+						KQ = *A - *B;
 						fout << KQ.toString(coSo) << endl;
 						//fout << A.toString(coSo) << " tru " << A.toString(coSo) << endl;
 						break;
 
 					case PHEP_AND:
-						KQ = A & B;
+						KQ = *A & *B;
 						fout << KQ.toString(coSo) << endl;
 						//fout << A.toString(coSo) << " & " << A.toString(coSo) << endl;
 						break;
 
 					case PHEP_OR:
-						KQ = A | B;
+						KQ = *A | *B;
 						fout << KQ.toString(coSo) << endl;
 						//fout << A.toString(coSo) << " | " << A.toString(coSo) << endl;
 						break;
 
 					case PHEP_XOR:
-						KQ = A ^ B;
+						KQ = *A ^ *B;
 						fout << KQ.toString(coSo) << endl;
 						//fout << A.toString(coSo) << " ^ " << A.toString(coSo) << endl;
 						break;
 
 					case PHEP_NOT: // Phep NOT chua ro rang...
-						KQ = A + ~B;
-						fout << KQ.toString(coSo) << endl;
+						/*KQ = *A + ~(*B);
+						fout << KQ.toString(coSo) << endl;*/
 						break;
 
 					default:
@@ -125,9 +125,10 @@ int main(int argc, char ** argv) {
 				int coSoDau = soTraVe[0];
 				int coSoCuoi = soTraVe[1];
 
-				BigInt soCanDoi(chuoiTraVe[0], coSoDau);
+				BigInt * soCanDoi = new BigInt(chuoiTraVe[0], coSoDau);
 
-				fout << soCanDoi.toString(coSoCuoi) << endl; 
+				fout << soCanDoi->toString(coSoCuoi) << endl;
+				free(soCanDoi);
 			}
 			else {
 				fout << "input khong hop le" << endl;
