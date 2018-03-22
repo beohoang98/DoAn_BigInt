@@ -1,0 +1,17 @@
+﻿Build started 3/22/2018 11:01:44 AM.
+     1>Project "E:\C_Drive\B_HocTap\KTMT-HN\DoAn\1612001_1612009_1612023_1612085_1612154\Test_O_Day\Test_O_Day.vcxproj" on node 3 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt ..\1612001_1612009_1612023_1612085_1612154\BigInt.cpp main.cpp
+         main.cpp
+         BigInt.cpp
+     1>e:\c_drive\b_hoctap\ktmt-hn\doan\1612001_1612009_1612023_1612085_1612154\1612001_1612009_1612023_1612085_1612154\bigint.cpp(27): warning C4018: '<' : signed/unsigned mismatch
+         Generating Code...
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"E:\C_Drive\B_HocTap\KTMT-HN\DoAn\1612001_1612009_1612023_1612085_1612154\Debug\Test_O_Day.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"E:\C_Drive\B_HocTap\KTMT-HN\DoAn\1612001_1612009_1612023_1612085_1612154\Debug\Test_O_Day.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:\C_Drive\B_HocTap\KTMT-HN\DoAn\1612001_1612009_1612023_1612085_1612154\Debug\Test_O_Day.lib" /MACHINE:X86 Debug\BigInt.obj
+         Debug\main.obj
+         Test_O_Day.vcxproj -> E:\C_Drive\B_HocTap\KTMT-HN\DoAn\1612001_1612009_1612023_1612085_1612154\Debug\Test_O_Day.exe
+     1>Done Building Project "E:\C_Drive\B_HocTap\KTMT-HN\DoAn\1612001_1612009_1612023_1612085_1612154\Test_O_Day\Test_O_Day.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:04.12
