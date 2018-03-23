@@ -1,4 +1,5 @@
 *.pdb
 *.ilk
 *.obj
-*/Debug/
+*/Debug/*
+Debug/

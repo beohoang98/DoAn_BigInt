@@ -19,8 +19,12 @@ namespace UnitTest1
 			Assert::AreEqual("FFAADD", A.toString(16).c_str());
 		}
 		TEST_METHOD(TestKhoiTao_BIN) {
-			BigInt A("01001100", 2);
-			Assert::AreEqual("01001100", A.toString(2).c_str());
+			BigInt A("00001001100", 2);
+			Assert::AreEqual("1001100", A.toString(2).c_str());
+		}
+		TEST_METHOD(TestKhoiTao_DEC_NEGATIVE) {
+			BigInt A("-10050", 10);
+			Assert::AreEqual("-10050", A.toString().c_str());
 		}
 
 		///Test Chuyen doi co so
@@ -36,6 +40,21 @@ namespace UnitTest1
 			BigInt A("15", 10);
 			Assert::AreEqual("1111", A.toString(2).c_str());
 		}
+		TEST_METHOD(Test_DEC_TO_HEX_MINUS) {
+			BigInt A("-1", 10);
+			/// 128 bits is 1
+			Assert::AreEqual("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF", A.toString(16).c_str());
+		}
+		TEST_METHOD(Test_DEC_TO_HEX_MINUS_2) {
+			BigInt A("-1655", 10);
+			/// 128 bits is 1
+			Assert::AreEqual("FFFFFFFFFFFFFFFFFFFFFFFFFFFFF989", A.toString(16).c_str());
+		}
+		TEST_METHOD(Test_DEC_TO_HEX_MINUS_3) {
+			BigInt A("-16546545", 10);
+			/// 128 bits is 1
+			Assert::AreEqual("FFFFFFFFFFFFFFFFFFFFFFFFFF03850F", A.toString(16).c_str());
+		}
 		
 
 		///Test phep toan
@@ -47,12 +66,44 @@ namespace UnitTest1
 			Assert::AreEqual("1001101", C.toString(2).c_str());
 		}
 
-		TEST_METHOD(TestCongSoLon)
+		TEST_METHOD(TestCongSoLon_20)
 		{
 			BigInt A("15320102001048988945");
 			BigInt B("1891281982");
 			BigInt C = A + B;
 			Assert::AreEqual("15320102002940270927", C.toString(10).c_str());
+		}
+
+		TEST_METHOD(TestCongSoLon_35)
+		{
+			BigInt A("123456789012345678901234567890111111");
+			BigInt B("123451234512345123451234512345");
+			BigInt C = A + B;
+			Assert::AreEqual("123456912463580191246358019124623456", C.toString(10).c_str());
+		}
+
+		TEST_METHOD(TruSoNho)
+		{
+			BigInt A("1501");
+			BigInt B("333");
+			BigInt C = A - B;
+			Assert::AreEqual("1168", C.toString().c_str());
+		}
+
+		TEST_METHOD(TruSoLon_20)
+		{
+			BigInt A("4568795465");
+			BigInt B("98765432198765432100");
+			BigInt C = A - B;
+			Assert::AreEqual("-98765432194196636635", C.toString().c_str());
+		}
+
+		TEST_METHOD(TruSoLon_35)
+		{
+			BigInt A("123456789012345678901234567890111111");
+			BigInt B("123451234512345123451234512345");
+			BigInt C = A - B;
+			Assert::AreEqual("123456665561111166556111116655598766", C.toString(10).c_str());
 		}
 
 		TEST_METHOD(TestNhanSoNho)
@@ -68,7 +119,7 @@ namespace UnitTest1
 			BigInt A("123123123123123123");
 			BigInt B("456456456");
 			BigInt C = A * B;
-			Assert::AreEqual("56 200 344 432 432 432 376 232 088", C.toString(10).c_str());
+			Assert::AreEqual("56200344432432432376232088", C.toString(10).c_str());
 		}
 	};
 }

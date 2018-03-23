@@ -12,26 +12,26 @@ BigInt::BigInt() {
 
 //ultility function
 string BigInt::chiaChuoiCho2(string dec, int &sodu) {
-	
 	if (dec == "0") return "0";
-
 	string kq;
-
-	sodu = 0;
+	bool isNegative = false;
 	int pos = 0;
-	if (dec[pos] == '-') {
-		kq = '-';
+	sodu = 0;
+
+	if (dec[0] == '-') {
+		isNegative = true;
 		pos++;
 	}
 
 	while (pos < dec.length()) {
 		int sochia = (dec[pos] - '0') / 2 + sodu * 5;
 		kq.push_back(sochia + '0');
-		
 		sodu = (dec[pos] - '0') % 2;
 		pos++;
 	}
+
 	while (kq.front() == '0' && kq.length() > 1) kq.erase(0, 1);
+	if (isNegative) kq.insert(0, "-");
 
 	return kq;
 }
@@ -85,23 +85,47 @@ BigInt::BigInt(string chuoiSo, int coSo) {
 
 	case 10:
 	{
+		bool isNegative = 0;
 		//kiem tra so am
 		if (chuoiSo[0] == '-') {
-			head = head | (1 << 7);
+			head = 0xFF;
+			memset(body, 0xFF, 15);
+			isNegative = true;
 			chuoiSo.erase(0, 1);
 		}
 
 		//chuyen dec sang bit
 		int sodu = 0;
 		int pos = 0;
+
 		while (chuoiSo != "0") {
 			chuoiSo = chiaChuoiCho2(chuoiSo, sodu);
+
 			//tim vi tri cua bit
 			int vitri_trong_bit = pos % 8;
 			int vitri_trong_mang = pos / 8;
+
 			// su dung phep | de gan 1bit vao vi tri thu pos
-			body[vitri_trong_mang] |= sodu << vitri_trong_bit;
+			body[vitri_trong_mang] ^= (sodu << vitri_trong_bit);
 			pos++;
+		}
+		if (isNegative) {
+			pos = 0;
+			sodu = 1;
+			while (sodu && pos < 15) {
+				if (body[pos] == 0xFF) {
+					body[pos] = 0;
+					sodu = 1;
+				}
+				else {
+					body[pos] += sodu;
+					sodu = 0;
+				}
+			}
+			if (sodu && (unsigned char)head < 0xFF) {
+				head += sodu;
+			}
+			head |= (1<<7);
 		}
 	}
 	break;
@@ -141,11 +165,11 @@ string BigInt::toString(int coSo) {
 	int start_block;
 
 
-	//kiem tra bit cao nhat
-	if (head & (1 << 7)) {
+	//kiem tra head
+	if (head < 0) {
 		//la so am
-		start_block = 15;
-		isNegative = true;
+		start_block = 15; //at head
+		isNegative = 1;
 	}
 	else {
 		start_block = 14;
@@ -160,13 +184,11 @@ string BigInt::toString(int coSo) {
 	{ // binary
 		while (start_block >= 0) {
 			string _8bit_string;
-			unsigned char block_value = (start_block < 15) ? body[start_block] : (head & 127);
+			unsigned char block_value = (start_block < 15) ? body[start_block] : head;
 
 			for (int i = 0; i < 8; ++i) {
 				char bit = (block_value % 2);
 				block_value /= 2;
-
-				//if (isNegative) bit = 1 - bit;
 				_8bit_string.push_back(bit + '0');
 			}
 
@@ -181,18 +203,45 @@ string BigInt::toString(int coSo) {
 
 	case 10:
 	{ // decimal
+		unsigned char * block = new unsigned char[16];
+		// day bit tam de chuyen ve thap phan
+		block[15] = head;
+		memcpy(block, body, 15);
+		
+		if (isNegative) {
+			int so_thieu = 1;
+			int block_pos = 0;
+			while (block_pos < 16) {
+				if (block[block_pos] == 0) {
+					block[block_pos] = 0xFF;
+					block[block_pos] ^= 0xFF;
+					so_thieu = 1;
+				}
+				else {
+					block[block_pos] -= so_thieu;
+					block[block_pos] ^= 0xFF;
+					so_thieu = 0;
+				}
+				++block_pos;
+			}
+		}
+
 		kq = "0";
-		int pos = (start_block+1) * 8;
+		int pos = (start_block+1)*8 - 1;// bo di bit cao nhat
 
 		while (pos >= 0) {
 			int vitri_trong_bit = pos % 8;
 			int vitri_block = pos / 8;
-			char bit = body[vitri_block] & (1 << vitri_trong_bit);
+
+			char bit = (block[vitri_block] & (1 << vitri_trong_bit));
 			int add_bit = bit ? 1 : 0;
 
 			kq = nhanChuoiCho2(kq, add_bit);
 			--pos;
 		}
+		if (isNegative) kq.insert(0, "-");
+
+		free(block);
 	}
 	break;
 
@@ -201,9 +250,9 @@ string BigInt::toString(int coSo) {
 	{ // heximal
 		while (start_block >= 0) {
 			string _4bit_string;
-			unsigned char block_value = (start_block < 15) ? body[start_block] : (head & 127);
+			unsigned char block_value = (start_block == 15) ? head : body[start_block];
 
-			while (block_value > 0) {
+			for (int i = 0; i < 2; ++i) { // 1 bytes co 2 so hex
 				char hex = block_value % 16;
 				block_value /= 16;
 				_4bit_string.push_back(HEX_VALUE[hex]);
