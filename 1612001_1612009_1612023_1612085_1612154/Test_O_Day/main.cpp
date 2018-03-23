@@ -4,5 +4,13 @@
 
 int main() {
 
+	/* TEST BEGIN */
+	int sodu = 0;
+	string test = "-6660";
+	BigInt A("-153");
+	cout << A.toString(10) << endl;
+	/* TEST DONE */
+	
+	system("pause");
 	return 0;
 }

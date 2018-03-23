@@ -19,8 +19,12 @@ namespace UnitTest1
 			Assert::AreEqual("FFAADD", A.toString(16).c_str());
 		}
 		TEST_METHOD(TestKhoiTao_BIN) {
-			BigInt A("01001100", 2);
+			BigInt A("00001001100", 2);
 			Assert::AreEqual("1001100", A.toString(2).c_str());
+		}
+		TEST_METHOD(TestKhoiTao_DEC_NEGATIVE) {
+			BigInt A("-10050", 10);
+			Assert::AreEqual("-10050", A.toString().c_str());
 		}
 
 		///Test Chuyen doi co so
@@ -36,10 +40,20 @@ namespace UnitTest1
 			BigInt A("15", 10);
 			Assert::AreEqual("1111", A.toString(2).c_str());
 		}
-		TEST_METHOD(Test_DEC_TO_BIN_MINUS) {
+		TEST_METHOD(Test_DEC_TO_HEX_MINUS) {
 			BigInt A("-1", 10);
 			/// 128 bits is 1
-			Assert::AreEqual("11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111", A.toString(2).c_str());
+			Assert::AreEqual("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF", A.toString(16).c_str());
+		}
+		TEST_METHOD(Test_DEC_TO_HEX_MINUS_2) {
+			BigInt A("-1655", 10);
+			/// 128 bits is 1
+			Assert::AreEqual("FFFFFFFFFFFFFFFFFFFFFFFFFFFFF989", A.toString(16).c_str());
+		}
+		TEST_METHOD(Test_DEC_TO_HEX_MINUS_3) {
+			BigInt A("-16546545", 10);
+			/// 128 bits is 1
+			Assert::AreEqual("FFFFFFFFFFFFFFFFFFFFFFFFFF03850F", A.toString(16).c_str());
 		}
 		
 
