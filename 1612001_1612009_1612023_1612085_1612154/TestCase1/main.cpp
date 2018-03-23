@@ -14,7 +14,7 @@ int main() {
 	string testProgramName = "1612001_1612009_1612023_1612085_1612154.exe";
 	string command = testProgramName + " \"" + TEST_INPUT + "\" \"" + TEST_RESULT + "\"";
 
-	cout << "excute " << command << endl;
+	cout << command << endl;
 	system(command.c_str());
 
 	ifstream fresult(TEST_RESULT);
@@ -43,9 +43,12 @@ int main() {
 		if (isTrue) ++cout_true; 
 		else ++cout_false;
 
-		cout << "Line " << id << (isTrue ? " true " : " false ")
-			<< expect_string
-			<< " " << calc_string << endl;
+		cout << "Line " << id << (isTrue ? " TRUE " : " FALSE ") << endl;
+
+		if (!isTrue) {
+			cout << "\texpect:" << expect_string << endl
+				<< "\t  calc:" << calc_string << endl;
+		}
 
 		++id;
 	}
@@ -54,8 +57,8 @@ int main() {
 	foutput.close();
 
 	cout << endl
-		<< "TRUE: " << cout_true << endl
-		<< "FALSE: " << cout_false << endl;
+		<< "TRUE: " << cout_true << "/" << id << "\t"
+		<< "FALSE: " << cout_false << "/" << id <<endl;
 
 	system("pause");
 	return 0;
