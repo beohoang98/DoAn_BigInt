@@ -121,5 +121,19 @@ namespace UnitTest1
 			BigInt C = A * B;
 			Assert::AreEqual("56200344432432432376232088", C.toString(10).c_str());
 		}
+
+		TEST_METHOD(Test_2_So_Am_Cong_Nhau) {
+			BigInt A("-1354621");
+			BigInt B("-456852132456");//-456852132456-1354621
+			BigInt C = A + B;
+			Assert::AreEqual("-456853487077", C.toString().c_str());
+		}
+
+		TEST_METHOD(Test_2_So_Am_Nhan_Nhau) {
+			BigInt A("-1354621");
+			BigInt B("-456852132456");//-456852132456*(-1354621)
+			BigInt C = A * B;
+			Assert::AreEqual("618861492519679200", C.toString().c_str());
+		}
 	};
 }
