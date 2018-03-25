@@ -26,21 +26,21 @@ public:
 	string toString(int coSo); // chuyen thanh chuoi voi he co so, mac dinh la 10
 
 	//phep toan
-	BigInt operator+(const BigInt &);
-	BigInt operator-(const BigInt &);
-	BigInt operator*(const BigInt &);
-	BigInt operator/(const BigInt &);
+	BigInt operator+(const BigInt &)const;
+	BigInt operator-(const BigInt &)const;
+	BigInt operator*(const BigInt &)const;
+	BigInt operator/(const BigInt &)const;
 	BigInt operator&(const BigInt &); //AND
 	BigInt operator|(const BigInt &); //OR
 	BigInt operator^(const BigInt &); //XOR
-
+	BigInt moveSign();
 	//so sanh
-	int compare(const BigInt &);
-	bool operator>(const BigInt &);
-	bool operator<(const BigInt &);
-	bool operator==(const BigInt &);
-	bool operator>=(const BigInt &);
-	bool operator<=(const BigInt &);
+	int compare(const BigInt &)const;
+	bool operator>(const BigInt &)const;
+	bool operator<(const BigInt &)const;
+	bool operator==(const BigInt &)const;
+	bool operator>=(const BigInt &)const;
+	bool operator<=(const BigInt &)const;
 
 	friend BigInt operator~(const BigInt &); // phep NOT, chi tac dung len chinh minh
 

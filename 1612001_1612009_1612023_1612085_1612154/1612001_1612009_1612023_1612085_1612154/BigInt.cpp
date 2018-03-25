@@ -280,21 +280,8 @@ string BigInt::toString(int coSo) {
 
 
 /// CAC XU LY TOAN TU 2 NGOI
-BigInt BigInt::operator+(const BigInt &A) {
+BigInt BigInt::operator+(const BigInt &A)const {
 	BigInt res;
-	if (head < 0 && A.head<0)		//cả 2 đều âm
-	{
-
-	}
-	if (head < 0)
-	{
-
-	}
-	if (A.head < 0)
-	{
-
-	}
-	//cả 2 đều dương
 	char du = 0;
 	for (int i = 0; i < 15; i++)
 	{
@@ -307,7 +294,7 @@ BigInt BigInt::operator+(const BigInt &A) {
 	return res;
 }
 
-BigInt BigInt::operator-(const BigInt &A) {
+BigInt BigInt::operator-(const BigInt &A)const {
 	BigInt res;
 	if (*this == A)
 		return res;
@@ -327,7 +314,16 @@ BigInt BigInt::operator-(const BigInt &A) {
 	//cả 2 đều dương
 	if (*this<A)		
 	{
+		BigInt res = A - (*this);
 
+		/*for (int i = 0; i < 15; i++)
+			res.body[i] ^= 0xFF;
+		res.head ^= 0xFF;*/
+		res = ~res;
+		cout << res.toString() << endl;
+		BigInt tmp("1", 10);
+		res = res + tmp;
+		return res;
 	}
 	
 	char nho = 0;
@@ -347,27 +343,91 @@ BigInt BigInt::operator-(const BigInt &A) {
 	return res;
 }
 
-BigInt BigInt::operator*(const BigInt &A) {
-	return BigInt();//de tam
+BigInt BigInt::operator*(const BigInt &A)const {
+	BigInt res;
+	int tmp = 0, nho = 0;
+	for (int i = 0; i < 15; i++)
+	{
+		for (int j = 0; j <= i; j++)
+			tmp += body[j] * A.body[i - j];
+		tmp += nho;
+		res.body[i] = tmp % 256;
+		nho = tmp / 256;
+		tmp = 0;
+	}
+	for (int i = 1; i <= 14; i++)
+		tmp += body[i] * A.body[15 - i];
+	tmp += head*A.body[0] + A.head*body[0] + nho;
+	res.head = tmp % 256;
+	return res;
 }
 
-BigInt BigInt::operator/(const BigInt &A) {
+BigInt BigInt::operator/(const BigInt &A)const {
 	return BigInt();//de tam
 }
 
 BigInt BigInt::operator&(const BigInt &A) {
-	return BigInt();//de tam
+	BigInt res;
+	for (int i = 0; i < 15; i++)
+		res.body[i] = body[i] & A.body[i];
+	res.head = head&A.head;
+	return res;
 }
 
 BigInt BigInt::operator|(const BigInt &A) {
-	return BigInt();//de tam
+	BigInt res;
+	for (int i = 0; i < 15; i++)
+		res.body[i] = body[i] | A.body[i];
+	res.head = head|A.head;
+	return res;
 }
 
 BigInt BigInt::operator^(const BigInt &A) {
-	return BigInt();//de tam
+	BigInt res;
+	for (int i = 0; i < 15; i++)
+		res.body[i] = body[i] ^ A.body[i];
+	res.head = head^A.head;
+	return res;
 }
 
-int BigInt::compare(const BigInt &A)
+BigInt BigInt::moveSign()
+{
+	BigInt zero("0", 10);
+	if ((*this) == zero)
+		return zero;
+	BigInt res = ~(*this);
+	if (res.head < 0)
+	{
+		char du = 1;
+		for (int i = 0; i < 15; i++)
+		{
+			int tmp = res.body[i] + du;
+			res.body[i] = tmp % 256;
+			du = tmp / 256;
+			if (du == 0)
+				break;
+		}
+		if (du != 0)
+		{
+			res.head = (res.head + du) & 127;
+		}
+		/*BigInt tmp = res;
+		tmp.head = 0;
+		BigInt num1("1", 10);
+		tmp = tmp + num1;
+		for (int i = 0; i < 15; i++)
+		{
+		}*/
+	}
+	else
+	{
+		BigInt num1("1", 10);
+		res = res + num1;
+	}
+	return res;
+}
+
+int BigInt::compare(const BigInt &A)const
 {
 	//Chưa xử lý số âm
 
@@ -386,29 +446,33 @@ int BigInt::compare(const BigInt &A)
 	return 0;
 }
 
-bool BigInt::operator>(const BigInt &A) {
+bool BigInt::operator>(const BigInt &A)const {
 	return compare(A) == 1;
 }
 
-bool BigInt::operator<(const BigInt &A) {
+bool BigInt::operator<(const BigInt &A)const {
 	return compare(A) == -1;
 }
 
-bool BigInt::operator==(const BigInt &A) {
+bool BigInt::operator==(const BigInt &A)const {
 	return compare(A) == 0;
 }
 
-bool BigInt::operator>=(const BigInt &A) {
+bool BigInt::operator>=(const BigInt &A)const {
 	return compare(A)>-1;
 }
 
-bool BigInt::operator<=(const BigInt &A) {
+bool BigInt::operator<=(const BigInt &A)const {
 	return compare(A) < 1;
 }
 
 
 BigInt operator~(const BigInt &A) {
-	return BigInt();//de tam
+	BigInt res;
+	for (int i = 0; i < 15; i++)
+		res.body[i] = A.body[i] ^ 0xFF;
+	res.head = A.head ^ 0xFF;
+	return res;
 }
 
 
