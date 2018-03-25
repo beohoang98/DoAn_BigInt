@@ -162,5 +162,44 @@ namespace UnitTest1
 			BigInt C = A + B;
 			Assert::AreEqual("-1", C.toString().c_str());
 		}
+
+		//test dich trai
+		TEST_METHOD(TEST_DICH_TRAI_1) {
+			BigInt A("255");
+			BigInt C = A << 5;
+			Assert::AreEqual("8160", C.toString().c_str());
+		}
+
+		TEST_METHOD(TEST_DICH_TRAI_2) {
+			BigInt A("255");
+			BigInt C = A << 12;
+			Assert::AreEqual("1044480", C.toString().c_str());
+		}
+
+		TEST_METHOD(TEST_DICH_TRAI_3) {
+			BigInt A("-255");
+			BigInt C = A << 12;
+			Assert::AreEqual("-1040385", C.toString().c_str());
+		}
+		TEST_METHOD(TEST_DICH_TRAI_4) {
+			BigInt A("255456465");
+			BigInt B("4096"); // 2 mu 12
+			BigInt C_1 = A * B;
+			BigInt C = A << 12;
+			Assert::AreEqual(C_1.toString().c_str(), C.toString().c_str());
+		}
+
+		//test dich phai
+		TEST_METHOD(TEST_DICH_PHAI_1) {
+			BigInt A("11111111", 2);
+			BigInt C = A >> 4;
+			Assert::AreEqual("1111", C.toString(2).c_str());
+		}
+
+		TEST_METHOD(TEST_DICH_PHAI_2) {
+			BigInt A("111100001111", 2);
+			BigInt C = A >> 10;
+			Assert::AreEqual("11", C.toString(2).c_str());
+		}
 	};
 }

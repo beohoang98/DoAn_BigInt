@@ -3,13 +3,10 @@
 
 
 int main() {
-
-	BigInt A("8798561227309538700840");
-	BigInt B = ~A;
-	BigInt C = A + B;
-
-	cout << (100 + ~(100)) << endl;
+	BigInt A("255");
+	BigInt C = A << 12;
 	
+	cout << C.toString() << endl;
 	system("pause");
 	return 0;
 }

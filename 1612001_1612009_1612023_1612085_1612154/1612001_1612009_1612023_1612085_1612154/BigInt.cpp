@@ -428,11 +428,87 @@ BigInt operator~(const BigInt &A) {
 
 
 BigInt BigInt::operator<<(int soBit) {
-	return BigInt();//de tam
+	if (soBit <= 0) throw new exception("shift left error");
+
+	BigInt result = (*this);
+
+	bool isNegative = result.body[15] & 128;
+	if (isNegative) {
+		result = result.negative();
+	}
+
+	int soBitDich = soBit % 8;
+	int soByteDich = soBit / 8;
+
+	if (soByteDich > 0) {
+		for (int i = 15; i >= soByteDich; --i) {
+			result.body[i] = result.body[i - soByteDich];
+		}
+		memset(result.body, 0, soByteDich);
+	}
+	if (soBitDich == 0) return result;
+
+	//when soBitDich > 0
+	unsigned char nho_old = result.body[0] >> (8 - soBitDich),
+				nho_new = 0;
+	result.body[0] = (unsigned char)(result.body[0] << soBitDich);
+
+	for (int i = 1; i < 16; ++i) {
+		nho_new = result.body[i] >> (8 - soBitDich);
+		unsigned char saukhiDich = (result.body[i] << soBitDich);
+		result.body[i] = saukhiDich | nho_old;
+		nho_old = nho_new;
+		nho_new = 0;
+	}
+
+	if (isNegative) {
+		result = result.negative();
+	}
+	return result;
 } //dich trai
 
 BigInt BigInt::operator>>(int soBit) {
-	return BigInt();//de tam
+	if (soBit <= 0) throw new exception("shift right error");
+
+	BigInt result = (*this);
+
+	bool isNegative = result.body[15] & 128;
+	if (isNegative) {
+		result = result.negative();
+	}
+
+	int soBitDich = soBit % 8;
+	int soByteDich = soBit / 8;
+
+	if (soByteDich > 0) {
+		for (int i = 0; i < 16 - soByteDich; ++i) {
+			result.body[i] = result.body[i + soByteDich];
+		}
+
+		//gan phan con lai = 0
+		for (int i = 16 - soByteDich; i < 16; ++i) {
+			result.body[i] = 0;
+		}
+	}
+	if (soBitDich == 0) return result;
+
+	//when soBitDich > 0
+	unsigned char nho_old = result.body[15] << (8 - soBitDich),
+		nho_new = 0;
+	result.body[15] = (unsigned char)(result.body[15] >> soBitDich);
+
+	for (int i = 14; i >= 0; --i) {
+		nho_new = result.body[i] << (8 - soBitDich);
+		unsigned char saukhiDich = (result.body[i] >> soBitDich);
+		result.body[i] = saukhiDich | nho_old;
+		nho_old = nho_new;
+		nho_new = 0;
+	}
+
+	if (isNegative) {
+		result = result.negative();
+	}
+	return result;
 } //dich phai
 
 
