@@ -6,8 +6,7 @@
 using namespace std;
 
 BigInt::BigInt() {
-	this->head = 0;
-	memset(body, 0, 15 * sizeof(unsigned char));
+	memset(body, 0, 16 * sizeof(unsigned char));
 }
 
 //ultility function
@@ -64,8 +63,7 @@ BigInt::BigInt(string chuoiSo) : BigInt(chuoiSo, 10) {
 }
 
 BigInt::BigInt(string chuoiSo, int coSo) {
-	this->head = 0;
-	memset(body, 0, 15 * sizeof(unsigned char));
+	memset(body, 0, 16 * sizeof(unsigned char));
 
 	switch (coSo)
 	{
@@ -88,8 +86,7 @@ BigInt::BigInt(string chuoiSo, int coSo) {
 		bool isNegative = 0;
 		//kiem tra so am
 		if (chuoiSo[0] == '-') {
-			head = 0xFF;
-			memset(body, 0xFF, 15);
+			memset(body, 0xFF, 16);
 			isNegative = true;
 			chuoiSo.erase(0, 1);
 		}
@@ -122,10 +119,6 @@ BigInt::BigInt(string chuoiSo, int coSo) {
 					sodu = 0;
 				}
 			}
-			if (sodu && (unsigned char)head < 0xFF) {
-				head += sodu;
-			}
-			head |= (1<<7);
 		}
 	}
 	break;
@@ -166,25 +159,22 @@ string BigInt::toString(int coSo) {
 
 
 	//kiem tra head
-	if (head < 0) {
-		//la so am
-		start_block = 15; //at head
+	if (body[15] & (1 << 7)) {
 		isNegative = 1;
 	}
-	else {
-		start_block = 14;
-		while (body[start_block] == 0 && start_block >= 0) {
-			--start_block;
-		}
-		if (start_block < 0) return "0";
+	start_block = 15;
+	while (body[start_block] == 0 && start_block >= 0) {
+		--start_block;
 	}
+	if (start_block < 0) return "0";
+
 
 	switch (coSo) {
 	case 2:
 	{ // binary
 		while (start_block >= 0) {
 			string _8bit_string;
-			unsigned char block_value = (start_block < 15) ? body[start_block] : head;
+			unsigned char block_value = body[start_block];
 
 			for (int i = 0; i < 8; ++i) {
 				char bit = (block_value % 2);
@@ -205,24 +195,23 @@ string BigInt::toString(int coSo) {
 	{ // decimal
 		unsigned char * block = new unsigned char[16];
 		// day bit tam de chuyen ve thap phan
-		block[15] = head;
-		memcpy(block, body, 15);
+		memcpy(block, body, 16);
 		
 		if (isNegative) {
-			int so_thieu = 1;
+			int so_du = 1;
 			int block_pos = 0;
-			while (block_pos < 16) {
-				if (block[block_pos] == 0) {
-					block[block_pos] = 0xFF;
-					block[block_pos] ^= 0xFF;
-					so_thieu = 1;
+			for (int i = 0; i < 16; ++i) {
+				block[i] ^= 0xFF;
+			}
+			while (so_du != 0 && block_pos < 16) {
+				if (block[block_pos] == 0xFF) {
+					block[block_pos] = 0;
+					so_du = 1;
 				}
 				else {
-					block[block_pos] -= so_thieu;
-					block[block_pos] ^= 0xFF;
-					so_thieu = 0;
+					block[block_pos] += so_du;
+					so_du = 0;
 				}
-				++block_pos;
 			}
 		}
 
@@ -250,7 +239,7 @@ string BigInt::toString(int coSo) {
 	{ // heximal
 		while (start_block >= 0) {
 			string _4bit_string;
-			unsigned char block_value = (start_block == 15) ? head : body[start_block];
+			unsigned char block_value = body[start_block];
 
 			for (int i = 0; i < 2; ++i) { // 1 bytes co 2 so hex
 				char hex = block_value % 16;
@@ -281,53 +270,25 @@ string BigInt::toString(int coSo) {
 
 /// CAC XU LY TOAN TU 2 NGOI
 BigInt BigInt::operator+(const BigInt &A)const {
-	BigInt res;
+	BigInt result;
 	char du = 0;
-	for (int i = 0; i < 15; i++)
+	for (int i = 0; i < 16; i++)
 	{
 		int tmp = body[i] + A.body[i] + du;
-		res.body[i] = tmp % 256;
+		result.body[i] = tmp % 256;
 		du = tmp / 256;
 	}
-	res.head = (head + A.head + du) & 127;
 
-	return res;
+	return result;
 }
 
 BigInt BigInt::operator-(const BigInt &A)const {
-	BigInt res;
+	BigInt res("0");
 	if (*this == A)
-		return res;
-	if (head < 0 && A.head<0)		//cả 2 đều âm
-	{
-
-	}
-	if (head < 0)
-	{
-
-	}
-	if (A.head < 0)
-	{
-
-	}
-
-	//cả 2 đều dương
-	if (*this<A)		
-	{
-		BigInt res = A - (*this);
-
-		/*for (int i = 0; i < 15; i++)
-			res.body[i] ^= 0xFF;
-		res.head ^= 0xFF;*/
-		res = ~res;
-		cout << res.toString() << endl;
-		BigInt tmp("1", 10);
-		res = res + tmp;
-		return res;
-	}
+		return res; //tra ve 0
 	
 	char nho = 0;
-	for (int i = 0; i < 15; i++)
+	for (int i = 0; i < 16; i++)
 	{
 		int tmp = body[i] - A.body[i] - nho;
 		if (tmp < 0)
@@ -339,14 +300,14 @@ BigInt BigInt::operator-(const BigInt &A)const {
 			nho = 0;
 		res.body[i] = tmp;
 	}
-	res.head = (head - A.head - nho) & 127;
+	//res.head = (head - A.head - nho) & 127;
 	return res;
 }
 
 BigInt BigInt::operator*(const BigInt &A)const {
 	BigInt res;
 	int tmp = 0, nho = 0;
-	for (int i = 0; i < 15; i++)
+	for (int i = 0; i < 16; i++)
 	{
 		for (int j = 0; j <= i; j++)
 			tmp += body[j] * A.body[i - j];
@@ -355,10 +316,7 @@ BigInt BigInt::operator*(const BigInt &A)const {
 		nho = tmp / 256;
 		tmp = 0;
 	}
-	for (int i = 1; i <= 14; i++)
-		tmp += body[i] * A.body[15 - i];
-	tmp += head*A.body[0] + A.head*body[0] + nho;
-	res.head = tmp % 256;
+
 	return res;
 }
 
@@ -368,81 +326,74 @@ BigInt BigInt::operator/(const BigInt &A)const {
 
 BigInt BigInt::operator&(const BigInt &A) {
 	BigInt res;
-	for (int i = 0; i < 15; i++)
+	for (int i = 0; i < 16; i++)
 		res.body[i] = body[i] & A.body[i];
-	res.head = head&A.head;
 	return res;
 }
 
 BigInt BigInt::operator|(const BigInt &A) {
 	BigInt res;
-	for (int i = 0; i < 15; i++)
+	for (int i = 0; i < 16; i++)
 		res.body[i] = body[i] | A.body[i];
-	res.head = head|A.head;
+	//res.head = head|A.head;
 	return res;
 }
 
 BigInt BigInt::operator^(const BigInt &A) {
 	BigInt res;
-	for (int i = 0; i < 15; i++)
+	for (int i = 0; i < 16; i++)
 		res.body[i] = body[i] ^ A.body[i];
-	res.head = head^A.head;
+	//res.head = head^A.head;
 	return res;
 }
 
-BigInt BigInt::moveSign()
+BigInt BigInt::negative()
 {
 	BigInt zero("0", 10);
 	if ((*this) == zero)
 		return zero;
 	BigInt res = ~(*this);
-	if (res.head < 0)
-	{
-		char du = 1;
-		for (int i = 0; i < 15; i++)
-		{
-			int tmp = res.body[i] + du;
-			res.body[i] = tmp % 256;
-			du = tmp / 256;
-			if (du == 0)
-				break;
+
+	int so_du = 1;
+	int pos = 0;
+	while (so_du != 0 && pos < 16) {
+		if (body[pos] == 0xFF) {
+			body[pos] = 0;
+			so_du = 1;
 		}
-		if (du != 0)
-		{
-			res.head = (res.head + du) & 127;
+		else {
+			body[pos] += so_du;
+			so_du = 0;
 		}
-		/*BigInt tmp = res;
-		tmp.head = 0;
-		BigInt num1("1", 10);
-		tmp = tmp + num1;
-		for (int i = 0; i < 15; i++)
-		{
-		}*/
 	}
-	else
-	{
-		BigInt num1("1", 10);
-		res = res + num1;
-	}
+	
 	return res;
 }
 
-int BigInt::compare(const BigInt &A)const
+int BigInt::compare(const BigInt &B)const
 {
-	//Chưa xử lý số âm
+	int isA_negative = body[15] & (1<<7); // so voi bit thu 8
+	int isB_negative = B.body[15] & (1 << 7);
 
-	//so sánh 2 số có ít nhất 1 số dương
-	if (head > A.head)
-		return 1;
-	if (head<A.head) 
+	if (isA_negative && isB_negative) {
+		// ca 2 deu am, doi chieu so sanh
+		return B.compare(*this);
+	}
+	else if (isA_negative) {
 		return -1;
-	for (int i = 14; i >= 0; i--)
+	}
+	else if (isB_negative) {
+		return 1;
+	}
+
+	for (int i = 15; i >= 0; i--)
 	{
-		if (body[i]>A.body[i])
+		if (body[i]>B.body[i])
 			return 1;
-		if (body[i]<A.body[i])
+		if (body[i]<B.body[i])
 			return -1;
 	}
+
 	return 0;
 }
 
@@ -468,11 +419,10 @@ bool BigInt::operator<=(const BigInt &A)const {
 
 
 BigInt operator~(const BigInt &A) {
-	BigInt res;
-	for (int i = 0; i < 15; i++)
-		res.body[i] = A.body[i] ^ 0xFF;
-	res.head = A.head ^ 0xFF;
-	return res;
+	BigInt result;
+	for (int i = 0; i < 16; i++)
+		result.body[i] = A.body[i] ^ 0xFF;
+	return result;
 }
 
 

@@ -121,5 +121,46 @@ namespace UnitTest1
 			BigInt C = A * B;
 			Assert::AreEqual("56200344432432432376232088", C.toString(10).c_str());
 		}
+
+		TEST_METHOD(TestNhan_Duong_Am) {
+			BigInt A("123123123123123123");
+			BigInt B("-456456456");
+			BigInt C = A * B;
+			Assert::AreEqual("-56200344432432432376232088", C.toString(10).c_str());
+		}
+
+		TEST_METHOD(TestNhan_Am_Am) {
+			BigInt A("-123123123123123123");
+			BigInt B("-456456456");
+			BigInt C = A * B;
+			Assert::AreEqual("56200344432432432376232088", C.toString(10).c_str());
+		}
+
+
+		//test and or xor not
+		TEST_METHOD(TEST_AND) {
+			BigInt A("12564231321564");
+			BigInt B("895613215645");
+			BigInt C = A & B;
+			Assert::AreEqual("274987033500", C.toString().c_str());
+		}
+		TEST_METHOD(TEST_OR) {
+			BigInt A("4549856123156");
+			BigInt B("8798561231564652132156");
+			BigInt C = A | B;
+			Assert::AreEqual("8798561231712023478076", C.toString().c_str());
+		}
+		TEST_METHOD(TEST_XOR) {
+			BigInt A("4549856123156");
+			BigInt B("8798561231564652132156");
+			BigInt C = A ^ B;
+			Assert::AreEqual("8798561227309538700840", C.toString().c_str());
+		}
+		TEST_METHOD(TEST_NOT) {
+			BigInt A("8798561227309538700840");
+			BigInt B = ~A;
+			BigInt C = A + B;
+			Assert::AreEqual("-1", C.toString().c_str());
+		}
 	};
 }

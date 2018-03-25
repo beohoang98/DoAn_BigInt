@@ -13,8 +13,7 @@ const string HEX_VALUE = "0123456789ABCDEF";
 class BigInt
 {
 private:
-	char head;
-	unsigned char body[15];
+	unsigned char body[16];
 	
 
 public:
@@ -33,7 +32,7 @@ public:
 	BigInt operator&(const BigInt &); //AND
 	BigInt operator|(const BigInt &); //OR
 	BigInt operator^(const BigInt &); //XOR
-	BigInt moveSign();
+	BigInt negative();
 	//so sanh
 	int compare(const BigInt &)const;
 	bool operator>(const BigInt &)const;

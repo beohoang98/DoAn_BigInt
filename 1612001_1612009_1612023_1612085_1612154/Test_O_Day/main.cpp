@@ -4,17 +4,12 @@
 
 int main() {
 
-	//BigInt a("1", 10);
-	//BigInt b("1238521851254587451210458745121455", 10);
-	BigInt a("1329227995784914729205674490288144383", 10);
-	BigInt b("-1329227995784914729205674490288144383", 10);
+	BigInt A("8798561227309538700840");
+	BigInt B = ~A;
+	BigInt C = A + B;
+
+	cout << (100 + ~(100)) << endl;
 	
-	/*BigInt c = a-b;
-	cout << a.toString() << " - " << b.toString() << " = " << c.toString() << endl;*/
-	BigInt c = a.moveSign();
-	cout << " "<<a.toString() << endl;
-	cout << c.toString() << endl;
-	cout << b.toString() << endl;
 	system("pause");
 	return 0;
 }
