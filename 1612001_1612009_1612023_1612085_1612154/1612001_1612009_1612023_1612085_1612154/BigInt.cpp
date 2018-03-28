@@ -68,60 +68,60 @@ BigInt::BigInt(string chuoiSo, int coSo) {
 	switch (coSo)
 	{
 	case 2:
-	{///case block
-		for (int len = chuoiSo.length(), pos = len - 1; pos >= 0; --pos) {
-			int bit_hientai = chuoiSo[pos] - '0';
+		{///case block
+			for (int len = chuoiSo.length(), pos = len - 1; pos >= 0; --pos) {
+				int bit_hientai = chuoiSo[pos] - '0';
 
-			int vitri_trong_bit = (len-pos-1) % 8;
-			int vitri_trong_mang = (len-pos-1) / 8;
+				int vitri_trong_bit = (len-pos-1) % 8;
+				int vitri_trong_mang = (len-pos-1) / 8;
 
-			// su dung phep | de gan 1bit vao vi tri thu pos
-			body[vitri_trong_mang] |= bit_hientai << vitri_trong_bit;
+				// su dung phep | de gan 1bit vao vi tri thu pos
+				body[vitri_trong_mang] ^= bit_hientai << vitri_trong_bit;
+			}
 		}
-	}
-	break;
+		break;
 
 	case 10:
-	{
-		bool isNegative = 0;
-		//kiem tra so am
-		if (chuoiSo[0] == '-') {
-			memset(body, 0xFF, 16);
-			isNegative = true;
-			chuoiSo.erase(0, 1);
-		}
+		{
+			bool isNegative = 0;
+			//kiem tra so am
+			if (chuoiSo[0] == '-') {
+				memset(body, 0xFF, 16);
+				isNegative = true;
+				chuoiSo.erase(0, 1);
+			}
 
-		//chuyen dec sang bit
-		int sodu = 0;
-		int pos = 0;
+			//chuyen dec sang bit
+			int sodu = 0;
+			int pos = 0;
 
-		while (chuoiSo != "0") {
-			chuoiSo = chiaChuoiCho2(chuoiSo, sodu);
+			while (chuoiSo != "0") {
+				chuoiSo = chiaChuoiCho2(chuoiSo, sodu);
 
-			//tim vi tri cua bit
-			int vitri_trong_bit = pos % 8;
-			int vitri_trong_mang = pos / 8;
+				//tim vi tri cua bit
+				int vitri_trong_bit = pos % 8;
+				int vitri_trong_mang = pos / 8;
 
-			// su dung phep | de gan 1bit vao vi tri thu pos
-			body[vitri_trong_mang] ^= (sodu << vitri_trong_bit);
-			pos++;
-		}
-		if (isNegative) {
-			pos = 0;
-			sodu = 1;
-			while (sodu && pos < 15) {
-				if (body[pos] == 0xFF) {
-					body[pos] = 0;
-					sodu = 1;
-				}
-				else {
-					body[pos] += sodu;
-					sodu = 0;
+				// su dung phep ^ de gan 1bit vao vi tri thu pos
+				body[vitri_trong_mang] ^= (sodu << vitri_trong_bit);
+				pos++;
+			}
+			if (isNegative) {
+				pos = 0;
+				sodu = 1;
+				while (sodu && pos < 15) {
+					if (body[pos] == 0xFF) {
+						body[pos] = 0;
+						sodu = 1;
+					}
+					else {
+						body[pos] += sodu;
+						sodu = 0;
+					}
 				}
 			}
 		}
-	}
-	break;
+		break;
 
 	case 16:
 	{//case block

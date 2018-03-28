@@ -14,7 +14,6 @@ class BigInt
 {
 private:
 	unsigned char body[16];
-	
 
 public:
 	BigInt();//mac dinh la 0, co so 10
