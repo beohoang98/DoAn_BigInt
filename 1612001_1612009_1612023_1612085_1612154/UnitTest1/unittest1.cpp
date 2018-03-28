@@ -177,9 +177,9 @@ namespace UnitTest1
 		}
 
 		TEST_METHOD(TEST_DICH_TRAI_3) {
-			BigInt A("-255");
+			BigInt A("-187");
 			BigInt C = A << 12;
-			Assert::AreEqual("-1040385", C.toString().c_str());
+			Assert::AreEqual("-761857", C.toString().c_str());
 		}
 		TEST_METHOD(TEST_DICH_TRAI_4) {
 			BigInt A("255456465");
@@ -200,6 +200,58 @@ namespace UnitTest1
 			BigInt A("111100001111", 2);
 			BigInt C = A >> 10;
 			Assert::AreEqual("11", C.toString(2).c_str());
+		}
+
+		//test chia
+		TEST_METHOD(TEST_CHIA_DUONG_1) {
+			BigInt A("12654632");
+			BigInt B("456");
+			BigInt C = A / B;
+			Assert::AreEqual("27751", C.toString().c_str());
+		}
+		TEST_METHOD(TEST_CHIA_DUONG_2) {
+			BigInt A("12654632465789655641232456");
+			BigInt B("4565645");
+			BigInt C = A / B;
+			Assert::AreEqual("2771707494951897407", C.toString().c_str());
+		}
+		TEST_METHOD(TEST_CHIA_AM_1) {
+			BigInt A("-46665");
+			BigInt B("56");
+			BigInt C = A / B;
+			Assert::AreEqual("-833", C.toString().c_str());
+		}
+		TEST_METHOD(TEST_CHIA_AM_2) {
+			BigInt A("46665");
+			BigInt B("-56");
+			BigInt C = A / B;
+			Assert::AreEqual("-833", C.toString().c_str());
+		}
+		TEST_METHOD(TEST_CHIA_AM_3) {
+			BigInt A("-46665");
+			BigInt B("-56");
+			BigInt C = A / B;
+			Assert::AreEqual("833", C.toString().c_str());
+		}
+
+		//test chia lay du
+		TEST_METHOD(TEST_CHIA_LAYDU_1) {
+			BigInt A("12654632");
+			BigInt B("456");
+			BigInt C = A % B;
+			Assert::AreEqual("176", C.toString().c_str());
+		}
+		TEST_METHOD(TEST_CHIA_LAYDU_2) {
+			BigInt A("-565");
+			BigInt B("7");
+			BigInt C = A % B;
+			Assert::AreEqual("2", C.toString().c_str());
+		}
+		TEST_METHOD(TEST_CHIA_LAYDU_3) {
+			BigInt A("126565454632");
+			BigInt B("-4564565486");
+			BigInt C = A % B;
+			Assert::AreEqual("-1242378976", C.toString().c_str());
 		}
 	};
 }

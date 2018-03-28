@@ -14,7 +14,7 @@ string BigInt::chiaChuoiCho2(string dec, int &sodu) {
 	if (dec == "0") return "0";
 	string kq;
 	bool isNegative = false;
-	int pos = 0;
+	unsigned char pos = 0;
 	sodu = 0;
 
 	if (dec[0] == '-') {
@@ -283,25 +283,27 @@ BigInt BigInt::operator+(const BigInt &A)const {
 }
 
 BigInt BigInt::operator-(const BigInt &A)const {
-	BigInt res("0");
-	if (*this == A)
-		return res; //tra ve 0
-	
-	char nho = 0;
-	for (int i = 0; i < 16; i++)
-	{
-		int tmp = body[i] - A.body[i] - nho;
-		if (tmp < 0)
-		{
-			nho = 1;
-			tmp += 256;
-		}
-		else
-			nho = 0;
-		res.body[i] = tmp;
-	}
-	//res.head = (head - A.head - nho) & 127;
-	return res;
+	//BigInt res("0");
+	//if (*this == A)
+	//	return res; //tra ve 0
+	//
+	//char nho = 0;
+	//for (int i = 0; i < 16; i++)
+	//{
+	//	int tmp = body[i] - A.body[i] - nho;
+	//	if (tmp < 0)
+	//	{
+	//		nho = 1;
+	//		tmp += 256;
+	//	}
+	//	else
+	//		nho = 0;
+	//	res.body[i] = tmp;
+	//}
+	////res.head = (head - A.head - nho) & 127;
+	//return res;
+
+	return (*this) + (A.negative());
 }
 
 BigInt BigInt::operator*(const BigInt &A)const {
@@ -320,18 +322,25 @@ BigInt BigInt::operator*(const BigInt &A)const {
 	return res;
 }
 
-BigInt BigInt::operator/(const BigInt &A)const {
-	return BigInt();//de tam
+BigInt BigInt::operator/(const BigInt &B)const {
+	BigInt soDu;
+	return this->_divide(B, soDu);
 }
 
-BigInt BigInt::operator&(const BigInt &A) {
+BigInt BigInt::operator%(const BigInt &B)const {
+	BigInt soDu;
+	this->_divide(B, soDu);
+	return soDu;
+}
+
+BigInt BigInt::operator&(const BigInt &A) const {
 	BigInt res;
 	for (int i = 0; i < 16; i++)
 		res.body[i] = body[i] & A.body[i];
 	return res;
 }
 
-BigInt BigInt::operator|(const BigInt &A) {
+BigInt BigInt::operator|(const BigInt &A) const {
 	BigInt res;
 	for (int i = 0; i < 16; i++)
 		res.body[i] = body[i] | A.body[i];
@@ -339,7 +348,7 @@ BigInt BigInt::operator|(const BigInt &A) {
 	return res;
 }
 
-BigInt BigInt::operator^(const BigInt &A) {
+BigInt BigInt::operator^(const BigInt &A) const {
 	BigInt res;
 	for (int i = 0; i < 16; i++)
 		res.body[i] = body[i] ^ A.body[i];
@@ -347,22 +356,79 @@ BigInt BigInt::operator^(const BigInt &A) {
 	return res;
 }
 
-BigInt BigInt::negative()
+BigInt BigInt::_divide(const BigInt& B, BigInt& soDu)const {
+	if ((*this) == BigInt("0"))
+		return *this;
+	if (B == BigInt("0")) {
+		throw new exception("Loi chia cho 0");
+		return BigInt("0");
+	}
+
+	BigInt Q = *this;
+	BigInt A("0");
+	BigInt M = B;
+
+	char oneIsNegative = 0;//false
+
+	if (Q.body[15] & 128) {
+		Q = Q.negative();
+		oneIsNegative = 1 - oneIsNegative;// toggle true/false
+	}
+	if (M.body[15] & 128) {
+		M = M.negative();
+		oneIsNegative = 1 - oneIsNegative;// toggle true/false
+	}
+
+	for (int i = 0; i < 128; ++i) {
+		A = (A << 1);
+		if (Q.body[15] & 128) {
+			A.body[0] |= 1;
+		}
+		else {
+			A.body[0] &= 254;
+		}
+		Q = Q << 1;
+
+		A = A - M;
+		if (A.body[15] & 128) {
+			A = A + M;
+			Q.body[0] = Q.body[0] & 254; // 1111 1110
+		}
+		else {
+			Q.body[0] = Q.body[0] | 1; // 0000 0001
+		}
+	}
+
+	if (oneIsNegative) {
+		if (B.body[15] & 128)
+			soDu = B + A;
+		else
+			soDu = B - A;
+		return Q.negative();
+	}
+	else {
+		soDu = A;
+		return Q;
+	}
+}
+
+BigInt BigInt::negative() const
 {
 	BigInt zero("0", 10);
 	if ((*this) == zero)
 		return zero;
+
 	BigInt res = ~(*this);
 
 	int so_du = 1;
 	int pos = 0;
 	while (so_du != 0 && pos < 16) {
-		if (body[pos] == 0xFF) {
-			body[pos] = 0;
+		if (res.body[pos] == 0xFF) {
+			res.body[pos] = 0;
 			so_du = 1;
 		}
 		else {
-			body[pos] += so_du;
+			res.body[pos] += so_du;
 			so_du = 0;
 		}
 	}
@@ -427,14 +493,14 @@ BigInt operator~(const BigInt &A) {
 
 
 
-BigInt BigInt::operator<<(int soBit) {
+BigInt BigInt::operator<<(int soBit) const {
 	if (soBit <= 0) throw new exception("shift left error");
 
 	BigInt result = (*this);
 
-	bool isNegative = result.body[15] & 128;
+	char isNegative = result.body[15] & 128;
 	if (isNegative) {
-		result = result.negative();
+		result = ~result;
 	}
 
 	int soBitDich = soBit % 8;
@@ -462,19 +528,20 @@ BigInt BigInt::operator<<(int soBit) {
 	}
 
 	if (isNegative) {
-		result = result.negative();
+		result = ~result;
 	}
+
 	return result;
 } //dich trai
 
-BigInt BigInt::operator>>(int soBit) {
+BigInt BigInt::operator>>(int soBit) const {
 	if (soBit <= 0) throw new exception("shift right error");
 
 	BigInt result = (*this);
 
-	bool isNegative = result.body[15] & 128;
+	char isNegative = result.body[15] & 128;
 	if (isNegative) {
-		result = result.negative();
+		result = ~result;
 	}
 
 	int soBitDich = soBit % 8;
@@ -506,7 +573,7 @@ BigInt BigInt::operator>>(int soBit) {
 	}
 
 	if (isNegative) {
-		result = result.negative();
+		result = ~result;
 	}
 	return result;
 } //dich phai
@@ -514,4 +581,49 @@ BigInt BigInt::operator>>(int soBit) {
 
 BigInt::~BigInt()
 {
+}
+
+
+
+//ham yeu cau
+bool * DecToBin(BigInt x) {
+	string binStr = x.toString(2);
+	int len = binStr.length();
+
+	bool * bin = new bool[128];
+	memset(bin, 0, sizeof(bool)* 128);
+	
+	for (int i = 0; i < len; ++i) {
+		bin[len - i - 1];
+	}
+
+	return bin;
+}
+
+BigInt BinToDec(bool * bit) {
+	string binStr;
+	while (bit) {
+		binStr.insert(0, (*bit ? "1" : "0"));
+		bit++;
+	}
+
+	return BigInt(binStr);
+}
+
+char * BinToHex(bool *bit) {
+	string hexStr = BinToDec(bit).toString(16);
+	
+	char * s = new char[hexStr.length() + 1];
+	strcpy(s, hexStr.c_str());
+
+	return s;
+}
+
+char *DecToHex(BigInt x) {
+	string hexStr = x.toString(16);
+
+	char * s = new char[hexStr.length() + 1];
+	strcpy(s, hexStr.c_str());
+
+	return s;
 }

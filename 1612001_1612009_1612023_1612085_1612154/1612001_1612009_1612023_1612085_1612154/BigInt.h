@@ -28,10 +28,13 @@ public:
 	BigInt operator-(const BigInt &)const;
 	BigInt operator*(const BigInt &)const;
 	BigInt operator/(const BigInt &)const;
-	BigInt operator&(const BigInt &); //AND
-	BigInt operator|(const BigInt &); //OR
-	BigInt operator^(const BigInt &); //XOR
-	BigInt negative();
+	BigInt operator%(const BigInt &)const;
+	BigInt operator&(const BigInt &)const; //AND
+	BigInt operator|(const BigInt &)const; //OR
+	BigInt operator^(const BigInt &)const; //XOR
+	
+	BigInt _divide(const BigInt&, BigInt&)const;
+	BigInt negative() const;
 	//so sanh
 	int compare(const BigInt &)const;
 	bool operator>(const BigInt &)const;
@@ -42,8 +45,8 @@ public:
 
 	friend BigInt operator~(const BigInt &); // phep NOT, chi tac dung len chinh minh
 
-	BigInt operator<<(int soBit); //dich trai
-	BigInt operator>>(int soBit); //dich phai
+	BigInt operator<<(int soBit)const; //dich trai
+	BigInt operator>>(int soBit)const; //dich phai
 	
 
 	///ultility function
@@ -55,5 +58,7 @@ public:
 };
 
 //ham yeu cau
-//bool* DecToBin(BigInt X);
-
+bool* DecToBin(BigInt x);
+BigInt BinToDec(bool *bit);
+char *BinToHex(bool *bit);
+char *DecToHex(BigInt x);
