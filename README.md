@@ -3,13 +3,13 @@
 ---
 
 ## THÀNH VIÊN
-**Tên**|**MSSV**
-:--- |:---
-HOÀNG DÂN AN 		|1612001
-NGUYỄN PHƯỚC AN 	|1612009
-TRƯƠNG THÀNH DANH 	|1612085
-NGUYỄN HOÀNG ANH 	|1612023
-HOÀNG HẢI GIANG 	|1612154
+|**Tên**|**MSSV**
+|:--- |:---
+|HOÀNG DÂN AN 		|1612001
+|NGUYỄN PHƯỚC AN 	|1612009
+|TRƯƠNG THÀNH DANH 	|1612085
+|NGUYỄN HOÀNG ANH 	|1612023
+|HOÀNG HẢI GIANG 	|1612154
 
 ## GIÁO VIÊN HƯỚNG DẪN
 * [LÊ VIẾT LONG](https://courses.fit.hcmus.edu.vn/user/profile.php?id=8)
@@ -36,7 +36,7 @@ HOÀNG HẢI GIANG 	|1612154
 * Bit đầu tiên dùng làm bit dấu (dấu lượng)
 * Biểu diễn số âm theo nguyên tắc bù 2 và bias (quá k = 128bit)
 
-![Cách thức lưu trữ](doc/Locale.png)
+![Cách thức lưu trữ](Report/Locale.png)
 
 ### CÁC PHƯƠNG PHÁP ĐỌC VÀO TỪ CHUỖI
 * Do số nguyên 16 byte quá lớn, nên ta chỉ có thể đọc vào từ chuỗi
@@ -47,10 +47,10 @@ HOÀNG HẢI GIANG 	|1612154
 ![doc co so 2]()
 
 #### Đọc chuỗi cơ số 16 (hex)
-![doc co so 16](doc/hexToBit.png)
+![doc co so 16](Report/hexToBit.png)
 
 #### Đọc chuỗi cơ số 10
-![doc co so 10](doc/decToBit.png)
+![doc co so 10](Report/decToBit.png)
 
 ---
 
@@ -74,5 +74,5 @@ HOÀNG HẢI GIANG 	|1612154
 
 ## TÀI LIỆU THAM KHẢO
 
-* [Chuong02_BieuDienSoNguyen](doc/Ch02_Bieu-dien-so-nguyen.pdf)
+* [Chuong02_BieuDienSoNguyen](Report/Ch02_Bieu-dien-so-nguyen.pdf)
 * [Stackoverflow](https://www.stackoverflow.com)
