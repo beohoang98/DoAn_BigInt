@@ -3,13 +3,13 @@
 ---
 
 ## THÀNH VIÊN
-**Tên** 			| **MSSV**
-:--- 				|:---
-HOÀNG DÂN AN 		| 1612001
-NGUYỄN PHƯỚC AN 	| 1612009
-TRƯƠNG THÀNH DANH 	| 1612085
-NGUYỄN HOÀNG ANH 	| 1612023
-HOÀNG HẢI GIANG 	| 1612154
+**Tên**|**MSSV**
+:--- |:---
+HOÀNG DÂN AN 		|1612001
+NGUYỄN PHƯỚC AN 	|1612009
+TRƯƠNG THÀNH DANH 	|1612085
+NGUYỄN HOÀNG ANH 	|1612023
+HOÀNG HẢI GIANG 	|1612154
 
 ## GIÁO VIÊN HƯỚNG DẪN
 * [LÊ VIẾT LONG](https://courses.fit.hcmus.edu.vn/user/profile.php?id=8)
@@ -36,7 +36,7 @@ HOÀNG HẢI GIANG 	| 1612154
 * Bit đầu tiên dùng làm bit dấu (dấu lượng)
 * Biểu diễn số âm theo nguyên tắc bù 2 và bias (quá k = 128bit)
 
-<center>![Cách thức lưu trữ](doc/Locale.png)</center>
+![Cách thức lưu trữ](doc/Locale.png)
 
 ### CÁC PHƯƠNG PHÁP ĐỌC VÀO TỪ CHUỖI
 * Do số nguyên 16 byte quá lớn, nên ta chỉ có thể đọc vào từ chuỗi
@@ -44,13 +44,13 @@ HOÀNG HẢI GIANG 	| 1612154
 * Ta có 3 cách để đọc vào từ chuỗi:
 
 #### Đọc chuỗi cơ số 2 (binary)
-<center>![doc co so 2](doc/)</center>
+![doc co so 2]()
 
 #### Đọc chuỗi cơ số 16 (hex)
-<center>![doc co so 16](doc/hexToBit.png)</center>
+![doc co so 16](doc/hexToBit.png)
 
 #### Đọc chuỗi cơ số 10
-<center>![doc co so 10](doc/decToBit.png)</center>
+![doc co so 10](doc/decToBit.png)
 
 ---
 
